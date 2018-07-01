@@ -8,10 +8,11 @@
       "cwd": "${workspaceRoot}",
       "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
       "windows": {
-        "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd"
+        "runtimeExecutable": "${workspaceRoot}\\node_modules\\.bin\\electron.cmd"
       },
       "program": "${workspaceRoot}/main.js",
-      "protocol": "inspector"
+      "protocol": "inspector",
+      "outputCapture": "std"
     },
     {
       "name": "Debug Renderer Process",
@@ -19,13 +20,12 @@
       "request": "launch",
       "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
       "windows": {
-        "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd"
+        "runtimeExecutable": "${workspaceRoot}\\node_modules\\.bin\\electron.cmd"
       },
       "runtimeArgs": [
-        "http://localhost:4000",
+        "${workspaceRoot}/main.js",
         "--remote-debugging-port=9222"
       ],
-      "sourceMaps": true,
       "webRoot": "${workspaceRoot}"
     }
   ]
