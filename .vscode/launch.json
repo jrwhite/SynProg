@@ -6,11 +6,11 @@
       "type": "node",
       "request": "launch",
       "cwd": "${workspaceRoot}",
-      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
+      "runtimeExecutable": "${workspaceRoot}/editor//node_modules/.bin/electron",
       "windows": {
-        "runtimeExecutable": "${workspaceRoot}\\node_modules\\.bin\\electron.cmd"
+        "runtimeExecutable": "${workspaceRoot}\\editor\\node_modules\\.bin\\electron.cmd"
       },
-      "program": "${workspaceRoot}/main.js",
+      "program": "${workspaceRoot}/editor/main.js",
       "protocol": "inspector",
       "outputCapture": "std"
     },
@@ -18,12 +18,12 @@
       "name": "Debug Renderer Process",
       "type": "chrome",
       "request": "launch",
-      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
+      "runtimeExecutable": "${workspaceRoot}/editor/node_modules/.bin/electron",
       "windows": {
-        "runtimeExecutable": "${workspaceRoot}\\node_modules\\.bin\\electron.cmd"
+        "runtimeExecutable": "${workspaceRoot}\\editor\\node_modules\\.bin\\electron.cmd"
       },
       "runtimeArgs": [
-        "${workspaceRoot}/main.js",
+        "${workspaceRoot}/editor/main.js",
         "--remote-debugging-port=9222"
       ],
       "webRoot": "${workspaceRoot}"

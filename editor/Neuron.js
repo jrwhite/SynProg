@@ -4,12 +4,15 @@ class Neuron {
         this.minor = width.toFixed(2) / 2.00
         this.ecc = Math.sqrt(1.00 - ((this.minor * this.minor) / (this.major * this.major)))
         this.theta = orientation.toFixed(2)
+        this.axonArc = Math.PI / 6;
         /**
          * Initialize the neuron base outline
          */
         this.bezierData = [
             this.ellipseBezier(0, Math.PI / 4),
-            this.ellipseBezier(Math.PI / 4, Math.PI)
+            this.ellipseBezier(Math.PI / 4, Math.PI / 2),
+            this.ellipseBezier(Math.PI / 2, 3 * Math.PI / 2),
+            this.ellipseBezier(3 * Math.PI / 2, 4 * Math.PI / 2)
         ]
         console.log(this.bezierData)
     }
