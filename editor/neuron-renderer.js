@@ -1,7 +1,6 @@
 var d3 = require("d3")
 var d3Transform = require("d3-transform")
 var d3Shape = require("d3-shape")
-var Neuron = require("./Neuron.js")
 const makeBezierCurves = require("./neuron-body-drawer.js")
 const {remote} = require('electron')
 const {Menu, MenuItem} = remote
@@ -55,21 +54,10 @@ var drawNeuronBodies = function (container, neuronData) {
         .attr("class", "neuron")
         .attr("transform", transformSetter)
         .append("path").attr("d", makeNeuronPathSetter)
-
-    neuronContainers.call(d3.drag()
+        .call(d3.drag()
             .on("start", dragStarted)
             .on("drag", dragged)
             .on("end", dragEnded))
-
-    // const paths = neuronContainers.map((c, i) => {
-    //     // maybe move this to a loop by itself to improve readibility
-    //     c.call(d3.drag()
-    //         .on("start", dragStarted)
-    //         .on("drag", dragged)
-    //         .on("end", dragEnded))
-
-    //     c.append("path").attr("d", pathSetters[i]) // bug with order maybe?
-    // })
 }
 
 var init = function initializeRenderer() {
