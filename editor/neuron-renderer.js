@@ -2,6 +2,7 @@ var d3 = require("d3")
 var d3Transform = require("d3-transform")
 var d3Shape = require("d3-shape")
 const makeBezierCurves = require("./neuron-body-drawer.js")
+const selectNeuron = require("./neuron-editor-overlay")
 const {remote} = require('electron')
 const {Menu, MenuItem} = remote
 
@@ -28,23 +29,19 @@ var createMenu = function (addNeuron) {
     return reCreateMenu
 }
 
-var makeNeuronPathSetter = function (data) {
-    let neuronPathSetter = d3.path()
-
+var neuronPathSetter = function (data) {
+    let pathSetter = d3.path()
 
     const bezierCurves = makeBezierCurves(data.length, data.width, data.angle)
-    neuronPathSetter.moveTo(bezierCurves[0].P1.x, bezierCurves[0].P1.y)
+    pathSetter.moveTo(bezierCurves[0].P1.x, bezierCurves[0].P1.y)
     for (let curve of bezierCurves) {
-        neuronPathSetter.bezierCurveTo(curve.Q1.x, curve.Q1.y, curve.Q2.x, curve.Q2.y, curve.P2.x, curve.P2.y)
+        pathSetter.bezierCurveTo(curve.Q1.x, curve.Q1.y, curve.Q2.x, curve.Q2.y, curve.P2.x, curve.P2.y)
     }
-    neuronPathSetter.closePath()
 
-    return neuronPathSetter;
+    return pathSetter;
 }
 
 var drawNeuronBodies = function (container, neuronData) {
-    const pathSetters = neuronData.map((n) => (makeNeuronPathSetter(n)))
-
     const transformSetter = d3Transform.transform()
         .translate((d) => ([d.x, d.y]))
 
@@ -52,12 +49,16 @@ var drawNeuronBodies = function (container, neuronData) {
         .data(neuronData)
         .enter().append("g")
         .attr("class", "neuron")
+        .attr("id", (d) => d.id)
         .attr("transform", transformSetter)
-        .append("path").attr("d", makeNeuronPathSetter)
+        .append("path").attr("d", neuronPathSetter)
         .call(d3.drag()
             .on("start", dragStarted)
             .on("drag", dragged)
             .on("end", dragEnded))
+        .call("click", selectNeuron)
+
+    return neuronContainers
 }
 
 var init = function initializeRenderer() {
@@ -75,16 +76,17 @@ var init = function initializeRenderer() {
                 "length": 100,
                 "width": 60,
                 "angle": 0,
-                "id": neuronAvailableIds.length ? neuronAvailableIds.pop() : nextNeuronId++
+                "id": neuronAvailableIds.length ? neuronAvailableIds.pop() : nextNeuronId++,
+                "selected": false
             })
             drawNeuronBodies(svgContainer, neuronData)
     }
-
     createMenu(addNeuron)
-    drawNeuronBodies(svgContainer, neuronData)
+
+    const removeNeuron = (id) => {
+
+    }
 }
-
-
 
 function dragStarted(d) {
     d3.select(this).raise().classed("active", true)

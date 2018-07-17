@@ -1,15 +1,19 @@
 :root {
     --darkumber: #363734;
     --lightfrenchgrey: rgba(148, 149, 143, 1.00);
-    --coolgrey: rgba(204, 219, 220, 0.60);
+    --coolgrey060: rgba(204, 219, 220, 0.60);
 }
 
 html {
-    background-color: var(--coolgrey);
+    background-color: var(--coolgrey060);
 }
 
 .neuron {
     fill: var(--lightfrenchgrey);
     stroke: var(--darkumber);
     stroke-width: 3px;
+}
+
+.active {
+
 }
