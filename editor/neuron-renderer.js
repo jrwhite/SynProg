@@ -1,7 +1,7 @@
 var d3 = require("d3")
 var d3Transform = require("d3-transform")
 var d3Shape = require("d3-shape")
-const makeBezierCurves = require("./neuron-body-drawer.js")
+const makeBezierCurves = require("./neuron-drawing-utils.js")
 const selectNeuron = require("./neuron-editor-overlay")
 const {remote} = require('electron')
 const {Menu, MenuItem} = remote
@@ -49,16 +49,14 @@ var drawNeuronBodies = function (container, neuronData) {
         .data(neuronData)
         .enter().append("g")
         .attr("class", "neuron")
-        .attr("id", (d) => d.id)
+        .attr("id", (d) => "n"+d.id)
         .attr("transform", transformSetter)
-        .append("path").attr("d", neuronPathSetter)
         .call(d3.drag()
             .on("start", dragStarted)
             .on("drag", dragged)
             .on("end", dragEnded))
-        .call("click", selectNeuron)
-
-    return neuronContainers
+        .on("click", selectNeuron)
+        .append("path").attr("d", neuronPathSetter)
 }
 
 var init = function initializeRenderer() {
@@ -90,6 +88,7 @@ var init = function initializeRenderer() {
 
 function dragStarted(d) {
     d3.select(this).raise().classed("active", true)
+    // selectNeuron(d)
 }
 
 function dragged(d) {

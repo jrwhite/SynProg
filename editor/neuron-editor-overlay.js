@@ -1,17 +1,29 @@
 const d3 = require("d3")
 
-var selectNeuron = function (d) {
-
-    let neuronContainer = d3.select(d.id)
-
-}
-
-var drawOverlay = function() {
-    overlayDatum = {}
+var drawOverlay = function(container, x, y) {
+    const overlayDatum = {
+        "x": 50,
+        "y": 50,
+        "r": 20
+    }
+    // const transformSetter = d3Transform.transform()
+    //     .translate((d) => ([d.x, d.y]))
     // allow only one overlay
-    overlayContainer = d3.select("neuron-overlay")
-        .datum(overlayDatum)
-        .enter()
+    overlayContainer = container.data([overlayDatum])
+        .append("circle")
+        .attr("cx", (d) => d.x)
+        .attr("cy", (d) => d.y)
+        .attr("r", (d) => d.r)
+        .attr("fill", "red")
 }
+
+var selectNeuron = function (d) {
+    if (!d.selected) {
+        let neuronContainer = d3.select("#n" + d.id)
+        drawOverlay(neuronContainer, d.x, d.y)
+        d.selected = true
+    }
+}
+
 
 module.exports = selectNeuron
