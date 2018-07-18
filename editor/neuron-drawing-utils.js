@@ -30,7 +30,7 @@ var getNodePoints = function(d) {
         "ecc": Math.sqrt(1.00 - ((minor * minor) / (major * major))),
         "theta": d.angle
     }
-    const nodes = [0]
+    const nodes = [0, PI]
     return nodes.map((nu) => ({
         "x": (ellipse.major * Math.cos(ellipse.theta) * Math.cos(nu)) - (ellipse.minor * Math.sin(ellipse.theta) * Math.sin(nu)),
         "y": (ellipse.major * Math.sin(ellipse.theta) * Math.cos(nu)) + (ellipse.minor * Math.cos(ellipse.theta) * Math.sin(nu))

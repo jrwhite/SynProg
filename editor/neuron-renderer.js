@@ -8,6 +8,18 @@ const {Menu, MenuItem} = remote
 
 var nextId = 0
 
+var neuronPathSetter = function (data) {
+    let pathSetter = d3.path()
+
+    const bezierCurves = makeBezierCurves(data.length, data.width, data.angle)
+    pathSetter.moveTo(bezierCurves[0].P1.x, bezierCurves[0].P1.y)
+    for (let curve of bezierCurves) {
+        pathSetter.bezierCurveTo(curve.Q1.x, curve.Q1.y, curve.Q2.x, curve.Q2.y, curve.P2.x, curve.P2.y)
+    }
+
+    return pathSetter;
+}
+
 var addNeuron = function(x, y) {
     let neuronData = {
         "x": x,
@@ -56,18 +68,6 @@ var createMenu = function () {
 
     let reCreateMenu = () => {}
     return reCreateMenu
-}
-
-var neuronPathSetter = function (data) {
-    let pathSetter = d3.path()
-
-    const bezierCurves = makeBezierCurves(data.length, data.width, data.angle)
-    pathSetter.moveTo(bezierCurves[0].P1.x, bezierCurves[0].P1.y)
-    for (let curve of bezierCurves) {
-        pathSetter.bezierCurveTo(curve.Q1.x, curve.Q1.y, curve.Q2.x, curve.Q2.y, curve.P2.x, curve.P2.y)
-    }
-
-    return pathSetter;
 }
 
 var init = function initializeRenderer() {
