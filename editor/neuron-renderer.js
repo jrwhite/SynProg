@@ -1,12 +1,45 @@
 var d3 = require("d3")
 var d3Transform = require("d3-transform")
-var d3Shape = require("d3-shape")
+var _ = require('lodash')
 const makeBezierCurves = require("./neuron-drawing-utils.js")
-const selectNeuron = require("./neuron-editor-overlay")
+const neuronClickSetter = require("./neuron-editor-overlay")
 const {remote} = require('electron')
 const {Menu, MenuItem} = remote
 
-var createMenu = function (addNeuron) {
+var nextId = 0
+
+var removeNeuron = function(id) {
+    d3.select("#n"+id).remove()
+}
+
+var addNeuron = function(x, y) {
+    let neuronData = {
+        "x": x,
+        "y": y,
+        "length": 100,
+        "width": 60,
+        "angle": 0,
+        "id": nextId++,
+        "selected": false
+    }   
+
+    const transformSetter = d3Transform.transform()
+        .translate((d) => ([d.x, d.y]))
+
+    d3.select("svg").append("g")
+        .data([neuronData])
+        .attr("class", "neuron")
+        .attr("id", (d) => "n"+d.id)
+        .attr("transform", transformSetter)
+        .call(d3.drag()
+            .on("start", dragStarted)
+            .on("drag", dragged)
+            .on("end", dragEnded))
+        .on("click", neuronClickSetter)
+        .append("path").attr("d", neuronPathSetter)
+}
+
+var createMenu = function () {
     const menu = new Menu()
     const addNeuronMenuItem = new MenuItem({
         label: "Add Neuron",
@@ -41,49 +74,12 @@ var neuronPathSetter = function (data) {
     return pathSetter;
 }
 
-var drawNeuronBodies = function (container, neuronData) {
-    const transformSetter = d3Transform.transform()
-        .translate((d) => ([d.x, d.y]))
-
-    const neuronContainers = container.selectAll("g")
-        .data(neuronData)
-        .enter().append("g")
-        .attr("class", "neuron")
-        .attr("id", (d) => "n"+d.id)
-        .attr("transform", transformSetter)
-        .call(d3.drag()
-            .on("start", dragStarted)
-            .on("drag", dragged)
-            .on("end", dragEnded))
-        .on("click", selectNeuron)
-        .append("path").attr("d", neuronPathSetter)
-}
-
 var init = function initializeRenderer() {
     let svgContainer = d3.select("body").append("svg")
         .attr("width", 1000)
         .attr("height", 800)
     
-    let neuronData = []
-    let neuronAvailableIds = []
-    let nextNeuronId = 0
-    const addNeuron = (x, y) => {
-            neuronData.push({
-                "x": x,
-                "y": y,
-                "length": 100,
-                "width": 60,
-                "angle": 0,
-                "id": neuronAvailableIds.length ? neuronAvailableIds.pop() : nextNeuronId++,
-                "selected": false
-            })
-            drawNeuronBodies(svgContainer, neuronData)
-    }
-    createMenu(addNeuron)
-
-    const removeNeuron = (id) => {
-
-    }
+    createMenu()
 }
 
 function dragStarted(d) {
