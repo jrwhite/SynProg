@@ -21,6 +21,22 @@ var makeBezierCurves = function (length, width, orientation) {
     return arcs.map(arc => ellipseBezier(ellipse, arc[0], arc[1]))
 }
 
+var getNodePoints = function(d) {
+    const major = d.length / 2.00
+    const minor = d.width / 2.00
+    const ellipse = {
+        "major": major,
+        "minor": minor,
+        "ecc": Math.sqrt(1.00 - ((minor * minor) / (major * major))),
+        "theta": d.angle
+    }
+    const nodes = [0]
+    return nodes.map((nu) => ({
+        "x": (ellipse.major * Math.cos(ellipse.theta) * Math.cos(nu)) - (ellipse.minor * Math.sin(ellipse.theta) * Math.sin(nu)),
+        "y": (ellipse.major * Math.sin(ellipse.theta) * Math.cos(nu)) + (ellipse.minor * Math.cos(ellipse.theta) * Math.sin(nu))
+    })) 
+} 
+
 function ellipseBezier(ellipse, nu1, nu2) {
     // Using technique from http://www.spaceroots.org/documents/ellipse/node22.html
     const el = (nu) => ({
@@ -50,4 +66,4 @@ function ellipseBezier(ellipse, nu1, nu2) {
     }
 }
 
-module.exports = makeBezierCurves
+module.exports = {makeBezierCurves: makeBezierCurves, getNodePoints: getNodePoints}

@@ -1,16 +1,12 @@
 var d3 = require("d3")
 var d3Transform = require("d3-transform")
 var _ = require('lodash')
-const makeBezierCurves = require("./neuron-drawing-utils.js")
+const {makeBezierCurves} = require("./neuron-drawing-utils.js")
 const neuronClickSetter = require("./neuron-editor-overlay")
 const {remote} = require('electron')
 const {Menu, MenuItem} = remote
 
 var nextId = 0
-
-var removeNeuron = function(id) {
-    d3.select("#n"+id).remove()
-}
 
 var addNeuron = function(x, y) {
     let neuronData = {
@@ -75,10 +71,12 @@ var neuronPathSetter = function (data) {
 }
 
 var init = function initializeRenderer() {
+    // TODO: just make this part of index.html
     let svgContainer = d3.select("body").append("svg")
         .attr("width", 1000)
         .attr("height", 800)
     
+    // TODO: put this stuff in the electron code (main.js)
     createMenu()
 }
 
