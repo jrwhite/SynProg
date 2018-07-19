@@ -2,7 +2,8 @@ var d3 = require("d3")
 var d3Transform = require("d3-transform")
 var _ = require('lodash')
 const {makeBezierCurves} = require("./neuron-drawing-utils.js")
-const {neuronClickSetter} = require("./neuron-editor-overlay")
+const {neuronClickSetter, drawDendOverlay} = require("./neuron-editor-overlay")
+const {prepMakeSynapse} = require("./synapse-renderer.js")
 const {remote} = require('electron')
 const {Menu, MenuItem} = remote
 
@@ -18,6 +19,14 @@ var neuronPathSetter = function (data) {
     }
 
     return pathSetter;
+}
+
+var neuronMouseOver = function (d) {
+    container = d3.select("#n"+d.id)
+    if (d3.select(".presyn").empty() == false && container.classed("presyn") == false && d3.select(".postyn").empty() == true) {
+        drawDendOverlay(container)
+        prepMakeSynapse(container)
+    }
 }
 
 var addNeuron = function(x, y) {
@@ -44,7 +53,7 @@ var addNeuron = function(x, y) {
             .on("drag", dragged)
             .on("end", dragEnded))
         .on("click", neuronClickSetter)
-        .on("mouseover", neuronClickSetter)
+        .on("mouseover", neuronMouseOver)
         .append("path").attr("d", neuronPathSetter)
 }
 

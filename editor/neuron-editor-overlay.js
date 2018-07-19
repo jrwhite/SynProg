@@ -10,8 +10,8 @@ var drawDendOverlay = function(container) {
         "id": "dend1"
     }
 
-    dendNodeContainer = container.data([dendNodeOverlay])
-        .append("circle")
+    dendNodeContainer = container.append("circle")
+        .data([dendNodeOverlay])
         .classed("overlay dend node", true)
         .attr("cx", (d) => d.x)
         .attr("cy", (d) => d.y)
@@ -35,9 +35,8 @@ var drawOverlay = function(container) {
         "synapses": []
     }
 
-
-    deleteContainer = container.data([deleteData])
-        .append("circle")
+    deleteContainer = container.append("circle")
+        .data([deleteData])
         .classed("overlay delete", true)
         .attr("cx", (d) => d.x)
         .attr("cy", (d) => d.y)
@@ -45,8 +44,8 @@ var drawOverlay = function(container) {
         .attr("fill", "red")
         .on("click", (d) => container.remove())
 
-    axonNodeContainer = container.data([axonNodeOverlay])
-        .append("circle")
+    axonNodeContainer = container.append("circle")
+        .data([axonNodeOverlay])
         .classed("overlay axon node", true)
         .attr("cx", (d) => d.x)
         .attr("cy", (d) => d.y)
@@ -56,7 +55,6 @@ var drawOverlay = function(container) {
         .on("click", (d) => startSynapse(container, d))
     
     drawDendOverlay(container)
-
 }
 
 var neuronClickSetter = function (d) {
