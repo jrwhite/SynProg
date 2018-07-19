@@ -2,7 +2,7 @@ var d3 = require("d3")
 var d3Transform = require("d3-transform")
 var _ = require('lodash')
 const {makeBezierCurves} = require("./neuron-drawing-utils.js")
-const neuronClickSetter = require("./neuron-editor-overlay")
+const {neuronClickSetter} = require("./neuron-editor-overlay")
 const {remote} = require('electron')
 const {Menu, MenuItem} = remote
 
@@ -44,6 +44,7 @@ var addNeuron = function(x, y) {
             .on("drag", dragged)
             .on("end", dragEnded))
         .on("click", neuronClickSetter)
+        .on("mouseover", neuronClickSetter)
         .append("path").attr("d", neuronPathSetter)
 }
 

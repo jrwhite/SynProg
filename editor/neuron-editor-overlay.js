@@ -1,6 +1,24 @@
 const d3 = require("d3")
 const {getNodePoints} = require("./neuron-drawing-utils.js")
-const startSynapse = require("./synapse-renderer.js")
+const {startSynapse} = require("./synapse-renderer.js")
+
+var drawDendOverlay = function(container) {
+    const dendNodeOverlay = {
+        "x": getNodePoints(container.datum())[1].x,
+        "y": getNodePoints(container.datum())[1].y,
+        "r": 5,
+        "id": "dend1"
+    }
+
+    dendNodeContainer = container.data([dendNodeOverlay])
+        .append("circle")
+        .classed("overlay dend node", true)
+        .attr("cx", (d) => d.x)
+        .attr("cy", (d) => d.y)
+        .attr("r", (d) => d.r)
+        .attr("id", (d) => d.id)
+        .attr("fill", "red")
+}
 
 var drawOverlay = function(container) {
     const deleteData = {
@@ -17,12 +35,6 @@ var drawOverlay = function(container) {
         "synapses": []
     }
 
-    const dendNodeOverlay = {
-        "x": getNodePoints(container.datum())[1].x,
-        "y": getNodePoints(container.datum())[1].y,
-        "r": 5,
-        "id": "dend1"
-    }
 
     deleteContainer = container.data([deleteData])
         .append("circle")
@@ -42,15 +54,9 @@ var drawOverlay = function(container) {
         .attr("id", (d) => d.id)
         .attr("fill", "red")
         .on("click", (d) => startSynapse(container, d))
+    
+    drawDendOverlay(container)
 
-    dendNodeContainer = container.data([dendNodeOverlay])
-        .append("circle")
-        .classed("overlay dend node", true)
-        .attr("cx", (d) => d.x)
-        .attr("cy", (d) => d.y)
-        .attr("r", (d) => d.r)
-        .attr("id", (d) => d.id)
-        .attr("fill", "red")
 }
 
 var neuronClickSetter = function (d) {
@@ -63,4 +69,7 @@ var neuronClickSetter = function (d) {
     }
 }
 
-module.exports = neuronClickSetter
+module.exports = {
+    neuronClickSetter: neuronClickSetter,
+    drawDendOverlay: drawDendOverlay
+}
