@@ -7,14 +7,26 @@ var mouseMove = function(e) {
         .y((d) => d.y)
 
     points = d3.select(".synapse").select("path").datum()
+    // offset line slightly to avoid accidentally clicking it
     points[1].x = (e.clientX - points[0].x) > 0 ? e.clientX - 10 : e.clientX + 10
     points[1].y = (e.clientY - points[0].y) > 0 ? e.clientY - 10 : e.clientY + 10
 
-    // d3.select(".synapse").select("path").datum()[1].x = e.clientX
-    // d3.select(".synapse").select("path").datum()[1].x = 10
-    // d3.select(".synapse").select("path").datum()[1].y = e.clientY
-    // d3.select(".synapse").select("path").datum()[1].y = 10
     d3.select(".synapse").select("path").attr("d", line)
+}
+
+var makeSynapse = function (d, synapseData) {
+    let line = d3.line()
+        .x((d) => d.x)
+        .y((d) => d.y)
+    // establish synapse and give it an id
+    d3.select(".synapse").attr("id", 5).select("path").datum(synapseData).attr("d", line)
+    // give presyn and postsyn synapse data
+    let neuronData = [{
+        synapses: [synapseData.id]
+    }]
+    d3.select(".presyn").data(neuronData).classed("presyn", false)
+    d3.select(".postsyn").data(neuronData).classed("postsyn", false)
+    window.removeEventListener("mousemove", mouseMove, false)
 }
 
 var startSynapse = function (container, d) {
@@ -28,6 +40,9 @@ var startSynapse = function (container, d) {
         }
     ]
 
+    const transformSetter = d3Transform.transform()
+        .translate((d) => ([d.x, d.y]))
+
     let line = d3.line()
         .x((d) => d.x)
         .y((d) => d.y)
@@ -35,6 +50,7 @@ var startSynapse = function (container, d) {
     lineContainer = d3.select("svg")
         .append("g")
         .classed("synapse", true)
+        .attr("transform", transformSetter)
         .attr("stroke", "red")
         .attr("stroke-width", 3)
         .append("path").datum(lineData).attr("d", line)
@@ -74,8 +90,7 @@ var prepMakeSynapse = function (container) {
 
     container.on("click", (d) => {
         console.log("click")
-        window.removeEventListener("mousemove", mouseMove, false)
-        d3.select(".synapse").select("path").datum(lineData).attr("d", line)
+        makeSynapse(d, lineData)
     })
 }
 

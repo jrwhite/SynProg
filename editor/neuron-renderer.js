@@ -37,7 +37,8 @@ var addNeuron = function(x, y) {
         "width": 60,
         "angle": 0,
         "id": nextId++,
-        "selected": false
+        "selected": false,
+        "synapses": []
     }   
 
     const transformSetter = d3Transform.transform()
@@ -96,6 +97,11 @@ function dragStarted(d) {
 }
 
 function dragged(d) {
+    // check for synapses in data field
+    if (d3.select(this).datum().synapses.length > 0) {
+        /// mmm nevermind ...
+        d3.select(this).datum().synapses[0].attr("transform", d3Transform.transform().translate([d.x = d3.event.x, d.y = d3.event.y]))
+    }
     d3.select(this).attr("transform", d3Transform.transform().translate([d.x = d3.event.x, d.y = d3.event.y]))
 }
 
