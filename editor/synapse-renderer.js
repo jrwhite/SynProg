@@ -13,8 +13,8 @@ var mouseMove = function(e) {
 
 var startSynapse = function (container, d) {
     let lineData = [{
-            "x": container.datum().x,
-            "y": container.datum().y
+            "x": container.datum().x + d.cx,
+            "y": container.datum().y + d.cy
         },
         {
             "x": 0,
@@ -41,15 +41,17 @@ var startSynapse = function (container, d) {
 var prepMakeSynapse = function (container) {
     container.classed("postyn", true)
     preNeuron = d3.select(".presyn")
-    axonNode = preNeuron.select(".axon")
-    dendNode = container.select(".dend")
+    axonNode = d3.select(".presyn").selectAll("circle.axon")[0]
+    console.log(axonNode.datum())
+    dendNode = container.selectAll(".dend")[0] // bug data is being propagated with selection.selecT()
+    console.log(dendNode.datum())
     axonPosition = {
-        "x": preNeuron.datum().x + axonNode.datum().x,
-        "y": preNeuron.datum().y + axonNode.datum().y
+        "x": preNeuron.datum().x + axonNode.datum().cx,
+        "y": preNeuron.datum().y + axonNode.datum().cy
     }
     dendPosition = {
-        "x": container.datum().x + dendNode.datum().x,
-        "y": container.datum().y + dendNode.datum().y
+        "x": container.datum().x + dendNode.datum().cx,
+        "y": container.datum().y + dendNode.datum().cy
     }
     let lineData = [
         {

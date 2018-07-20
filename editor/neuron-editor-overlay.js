@@ -4,8 +4,8 @@ const {startSynapse} = require("./synapse-renderer.js")
 
 var drawDendOverlay = function(container) {
     const dendNodeOverlay = {
-        "x": getNodePoints(container.datum())[1].x,
-        "y": getNodePoints(container.datum())[1].y,
+        "cx": getNodePoints(container.datum())[1].x,
+        "cy": getNodePoints(container.datum())[1].y,
         "r": 5,
         "id": "dend1"
     }
@@ -13,8 +13,8 @@ var drawDendOverlay = function(container) {
     dendNodeContainer = container.append("circle")
         .data([dendNodeOverlay])
         .classed("overlay dend node", true)
-        .attr("cx", (d) => d.x)
-        .attr("cy", (d) => d.y)
+        .attr("cx", (d) => d.cx)
+        .attr("cy", (d) => d.cy)
         .attr("r", (d) => d.r)
         .attr("id", (d) => d.id)
         .attr("fill", "red")
@@ -22,14 +22,16 @@ var drawDendOverlay = function(container) {
 
 var drawOverlay = function(container) {
     const deleteData = {
-        "x": 50,
-        "y": -50,
+        "cx": 50,
+        "cy": -50,
         "r": 10
     }
 
     const axonNodeOverlay = {
-        "x": getNodePoints(container.datum())[0].x,
-        "y": getNodePoints(container.datum())[0].y,
+        // "x": getNodePoints(container.datum())[0].x,
+        "cx": 50,
+        // "y": getNodePoints(container.datum())[0].y,
+        "cy": 0,
         "r": 5,
         "id": "axon",
         "synapses": []
@@ -38,8 +40,8 @@ var drawOverlay = function(container) {
     deleteContainer = container.append("circle")
         .data([deleteData])
         .classed("overlay delete", true)
-        .attr("cx", (d) => d.x)
-        .attr("cy", (d) => d.y)
+        .attr("cx", (d) => d.cx)
+        .attr("cy", (d) => d.cy)
         .attr("r", (d) => d.r)
         .attr("fill", "red")
         .on("click", (d) => container.remove())
@@ -47,14 +49,15 @@ var drawOverlay = function(container) {
     axonNodeContainer = container.append("circle")
         .data([axonNodeOverlay])
         .classed("overlay axon node", true)
-        .attr("cx", (d) => d.x)
-        .attr("cy", (d) => d.y)
+        .attr("cx", (d) => d.cx)
+        .attr("cy", (d) => d.cy)
         .attr("r", (d) => d.r)
         .attr("id", (d) => d.id)
         .attr("fill", "red")
         .on("click", (d) => startSynapse(container, d))
     
     drawDendOverlay(container)
+
 }
 
 var neuronClickSetter = function (d) {
