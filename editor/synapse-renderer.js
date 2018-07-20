@@ -6,8 +6,14 @@ var mouseMove = function(e) {
         .x((d) => d.x)
         .y((d) => d.y)
 
-    d3.select(".synapse").select("path").datum()[1].x = e.clientX
-    d3.select(".synapse").select("path").datum()[1].y = e.clientY
+    points = d3.select(".synapse").select("path").datum()
+    points[1].x = (e.clientX - points[0].x) > 0 ? e.clientX - 10 : e.clientX + 10
+    points[1].y = (e.clientY - points[0].y) > 0 ? e.clientY - 10 : e.clientY + 10
+
+    // d3.select(".synapse").select("path").datum()[1].x = e.clientX
+    // d3.select(".synapse").select("path").datum()[1].x = 10
+    // d3.select(".synapse").select("path").datum()[1].y = e.clientY
+    // d3.select(".synapse").select("path").datum()[1].y = 10
     d3.select(".synapse").select("path").attr("d", line)
 }
 
@@ -41,17 +47,15 @@ var startSynapse = function (container, d) {
 var prepMakeSynapse = function (container) {
     container.classed("postyn", true)
     preNeuron = d3.select(".presyn")
-    axonNode = d3.select(".presyn").selectAll("circle.axon")[0]
-    console.log(axonNode.datum())
-    dendNode = container.selectAll(".dend")[0] // bug data is being propagated with selection.selecT()
-    console.log(dendNode.datum())
+    axonNode = d3.select(".presyn").selectAll(".axon").data()[0]
+    dendNode = container.selectAll(".dend").data()[0]
     axonPosition = {
-        "x": preNeuron.datum().x + axonNode.datum().cx,
-        "y": preNeuron.datum().y + axonNode.datum().cy
+        "x": preNeuron.datum().x + axonNode.cx,
+        "y": preNeuron.datum().y + axonNode.cy
     }
     dendPosition = {
-        "x": container.datum().x + dendNode.datum().cx,
-        "y": container.datum().y + dendNode.datum().cy
+        "x": container.datum().x + dendNode.cx,
+        "y": container.datum().y + dendNode.cy
     }
     let lineData = [
         {
