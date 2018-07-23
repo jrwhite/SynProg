@@ -14,12 +14,22 @@ var mouseMove = function(e) {
     d3.select(".synapse").select("path").attr("d", line)
 }
 
-var makeSynapse = function (d, synapseData) {
+var makeSynapse = function (d, lineData) {
+    // presyn = d3.select(".presyn").datum()
+    // postsyn = d3.select(".postsyn").datum()
+    let synapseData = {
+        "id": "s5"
+        // "axonNode": presyn.id,
+        // "dendNode": postsyn.id
+    }
     let line = d3.line()
         .x((d) => d.x)
         .y((d) => d.y)
     // establish synapse and give it an id
-    d3.select(".synapse").attr("id", 5).select("path").datum(synapseData).attr("d", line)
+    d3.select(".synapse").attr("id", "s5").select("path").datum(lineData).attr("d", line)
+    // set node data
+    d3.select(".presyn").selectAll(".axon").datum()
+        .synapses.push(synapseData.id)
     // give presyn and postsyn synapse data
     let neuronData = [{
         synapses: [synapseData.id]
@@ -27,6 +37,21 @@ var makeSynapse = function (d, synapseData) {
     d3.select(".presyn").data(neuronData).classed("presyn", false)
     d3.select(".postsyn").data(neuronData).classed("postsyn", false)
     window.removeEventListener("mousemove", mouseMove, false)
+}
+
+var remakeSynapse = function (id, nodeData, neuronData) {
+    // remake synapse after one of the neurons is moved
+    synapse = d3.select("#s5")
+    let line = d3.line()
+        .x((d) => d.x)
+        .y((d) => d.y)
+    
+    points = synapse.select("path").datum()
+
+    points[0].x = neuronData.x + nodeData.cx
+    points[0].y = neuronData.y + nodeData.cy
+    synapse.select("path").attr("d", line)
+    
 }
 
 var startSynapse = function (container, d) {
@@ -40,9 +65,6 @@ var startSynapse = function (container, d) {
         }
     ]
 
-    const transformSetter = d3Transform.transform()
-        .translate((d) => ([d.x, d.y]))
-
     let line = d3.line()
         .x((d) => d.x)
         .y((d) => d.y)
@@ -50,7 +72,6 @@ var startSynapse = function (container, d) {
     lineContainer = d3.select("svg")
         .append("g")
         .classed("synapse", true)
-        .attr("transform", transformSetter)
         .attr("stroke", "red")
         .attr("stroke-width", 3)
         .append("path").datum(lineData).attr("d", line)
@@ -61,7 +82,7 @@ var startSynapse = function (container, d) {
 }
 
 var prepMakeSynapse = function (container) {
-    container.classed("postyn", true)
+    container.classed("postsyn", true)
     preNeuron = d3.select(".presyn")
     axonNode = d3.select(".presyn").selectAll(".axon").data()[0]
     dendNode = container.selectAll(".dend").data()[0]
@@ -96,5 +117,6 @@ var prepMakeSynapse = function (container) {
 
 module.exports = {
     startSynapse: startSynapse,
-    prepMakeSynapse: prepMakeSynapse
+    prepMakeSynapse: prepMakeSynapse,
+    remakeSynapse: remakeSynapse
 }

@@ -3,7 +3,7 @@ var d3Transform = require("d3-transform")
 var _ = require('lodash')
 const {makeBezierCurves} = require("./neuron-drawing-utils.js")
 const {neuronClickSetter, drawDendOverlay} = require("./neuron-editor-overlay")
-const {prepMakeSynapse} = require("./synapse-renderer.js")
+const {prepMakeSynapse, remakeSynapse} = require("./synapse-renderer.js")
 const {remote} = require('electron')
 const {Menu, MenuItem} = remote
 
@@ -38,7 +38,8 @@ var addNeuron = function(x, y) {
         "angle": 0,
         "id": nextId++,
         "selected": false,
-        "synapses": []
+        "synapses": [],
+        "nodes": []
     }   
 
     const transformSetter = d3Transform.transform()
@@ -97,16 +98,35 @@ function dragStarted(d) {
 }
 
 function dragged(d) {
-    // check for synapses in data field
-    if (d3.select(this).datum().synapses.length > 0) {
-        /// mmm nevermind ...
-        d3.select(this).datum().synapses[0].attr("transform", d3Transform.transform().translate([d.x = d3.event.x, d.y = d3.event.y]))
+    translation = {
+        "cx": d3.event.x,
+        "cy": d3.event.y
     }
+
+    
+
+    //update synapses
+    // d3.select(this).datum().synapses.map((d) => remakeSynapse(d))
+
+    // if (d3.select(this).datum().synapses.length > 0) {
+    //     remakeSynapse(d3.select(this).datum().synapses[0], "axon", translation)
+    //     // select axon, then dend. do an each() to modify their synapse line data
+    //     d3.select(this).selectAll(".axon").each((d) => {
+    //         remakeSynapse(d.synapses[0].id, translation)
+    //     })
+    // }
     d3.select(this).attr("transform", d3Transform.transform().translate([d.x = d3.event.x, d.y = d3.event.y]))
+
+    // update synapses
+    d3.select(this).selectAll(".axon").each((d) => {
+        console.log(d)
+        d.synapses.map((id) => remakeSynapse(id, d, d3.select(this).datum()))
+    })
 }
 
 function dragEnded(d) {
     d3.select(this).classed("active", false);
+    console.log(d3.select(this).datum())
 }
 
 init()

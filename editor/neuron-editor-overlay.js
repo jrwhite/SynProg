@@ -7,7 +7,8 @@ var drawDendOverlay = function(container) {
         "cx": getNodePoints(container.datum())[1].x,
         "cy": getNodePoints(container.datum())[1].y,
         "r": 5,
-        "id": "dend1"
+        "id": "dend1",
+        "synapses": []
     }
 
     dendNodeContainer = container.append("circle")
