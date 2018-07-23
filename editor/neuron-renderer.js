@@ -3,7 +3,7 @@ var d3Transform = require("d3-transform")
 var _ = require('lodash')
 const {makeBezierCurves} = require("./neuron-drawing-utils.js")
 const {neuronClickSetter, drawDendOverlay} = require("./neuron-editor-overlay")
-const {prepMakeSynapse, remakeSynapse} = require("./synapse-renderer.js")
+const {prepMakeSynapse, synapseAxonMoved, synapseDendMoved} = require("./synapse-renderer.js")
 const {remote} = require('electron')
 const {Menu, MenuItem} = remote
 
@@ -107,7 +107,10 @@ function dragged(d) {
 
     // update synapses
     d3.select(this).selectAll(".axon").each((d) => {
-        d.synapses.map((id) => remakeSynapse(id, d, d3.select(this).datum()))
+        d.synapses.map((id) => synapseAxonMoved(id, d, d3.select(this).datum()))
+    })
+    d3.select(this).selectAll(".dend").each((d) => {
+        d.synapses.map((id) => synapseDendMoved(id, d, d3.select(this).datum()))
     })
 }
 

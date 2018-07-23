@@ -7,6 +7,7 @@ var drawDendOverlay = function(container) {
         "cx": getNodePoints(container.datum())[1].x,
         "cy": getNodePoints(container.datum())[1].y,
         "r": 5,
+        "type": "dend",
         "id": "dend1",
         "synapses": []
     }
@@ -34,6 +35,7 @@ var drawOverlay = function(container) {
         // "y": getNodePoints(container.datum())[0].y,
         "cy": 0,
         "r": 5,
+        "type": "axon",
         "id": "axon",
         "synapses": []
     }
