@@ -1,16 +1,18 @@
 var d3 = require("d3")
 const {remote} = require('electron')
 
+var nextSynapseId = 0
+
 var drawSynapse = function (selectionStr) {
     let line = d3.line()
         .x((d) => d.x)
         .y((d) => d.y)
 
-    d3.select(selectionStr).select("path").attr("d", line)
+    d3.select(selectionStr).selectAll("path").attr("d", line)
 }
 
 var mouseMove = function(e) {
-    points = d3.select(".synapse").select("path").datum()
+    points = d3.select(".synapse.active").selectAll("path").datum()
     // offset line slightly to avoid accidentally clicking it
     points[1].x = (e.clientX - points[0].x) > 0 ? e.clientX - 10 : e.clientX + 10
     points[1].y = (e.clientY - points[0].y) > 0 ? e.clientY - 10 : e.clientY + 10
@@ -18,53 +20,50 @@ var mouseMove = function(e) {
     drawSynapse(".synapse.active")
 }
 
-var makeSynapse = function (d, lineData) {
-    // presyn = d3.select(".presyn").datum()
-    // postsyn = d3.select(".postsyn").datum()
+var makeSynapse = function (d, lineData, makeDend) {
+    window.removeEventListener("mousemove", mouseMove, false)
+    presyn = d3.select(".presyn").datum()
+    postsyn = d3.select(".postsyn").datum()
     let synapseData = {
-        "id": "s5"
-        // "axonNode": presyn.id,
-        // "dendNode": postsyn.id
+        "id": "s" + nextSynapseId++,
+        "axonNode": presyn.id,
+        "dendNode": postsyn.id
     }
     let line = d3.line()
         .x((d) => d.x)
         .y((d) => d.y)
     // establish synapse and give it an id
     d3.select(".synapse.active")
-        .attr("id", "s5")
+        .datum(synapseData)
+        .attr("id", (d) => d.id)
         .classed("active", false)
-        .select("path").datum(lineData).attr("d", line)
+        .selectAll("path").datum(lineData).attr("d", line)
     // set node data
-    d3.select(".presyn").selectAll(".axon").datum()
-        .synapses.push(synapseData.id)
-    d3.select(".postsyn").selectAll(".dend").datum()
-        .synapses.push(synapseData.id)
+    makeDend(synapseData)
+    presyn.synapses.push(synapseData.id)
+    presyn.nodes[0].synapses.push(synapseData.id) // set axon synapse reference
+    postsyn.synapses.push(synapseData.id)
     // give presyn and postsyn synapse data
-    let neuronData = [{
-        synapses: [synapseData.id]
-    }]
-    d3.select(".presyn").data(neuronData).classed("presyn", false)
-    d3.select(".postsyn").data(neuronData).classed("postsyn", false)
-    window.removeEventListener("mousemove", mouseMove, false)
+    d3.select(".presyn").classed("presyn", false)
+    d3.select(".postsyn").classed("postsyn", false)
 }
 
-var synapseDendMoved = function (id, dendData, neuronData) {
-    synapse = d3.select(id)
-    points = synapse.select("path").datum()
+var synapseDendMoved = function (id, change) {
+    synapse = d3.selectAll("#"+id)
+    points = synapse.selectAll("path").datum()
+    points[1].x += change.cx
+    points[1].y += change.cy
 
-    points[1].x = neuronData.x + dendData.cx
-    points[1].y = neuronData.y + dendData.cy
-
-    drawSynapse(id)
+    drawSynapse("#"+id)
 }
 
-var synapseAxonMoved = function (id, axonData, neuronData) {
+var synapseAxonMoved = function (id, change) {
     // remake synapse after one of the neurons is moved
-    synapse = d3.select("#"+id)
-    points = synapse.select("path").datum()
 
-    points[0].x = neuronData.x + axonData.cx
-    points[0].y = neuronData.y + axonData.cy
+    synapse = d3.selectAll("#"+id)
+    points = synapse.selectAll("path").datum()
+    points[0].x += change.cx
+    points[0].y += change.cy
 
     drawSynapse("#"+id)
 }
@@ -96,15 +95,20 @@ var startSynapse = function (container, d) {
     container.classed("presyn", true)
 }
 
-var prepMakeSynapse = function (container) {
+var prepMakeSynapse = function (container, prepDend) {
+    /**
+     * clicking neuron body creates a new dendrite. (not to exceed max dend count)
+     * clicking an existing dendrite adds synapse to that dendrite
+     */
     container.classed("postsyn", true)
     preNeuron = d3.select(".presyn")
     axonNode = d3.select(".presyn").selectAll(".axon").data()[0]
-    dendNode = container.selectAll(".dend").data()[0]
     axonPosition = {
         "x": preNeuron.datum().x + axonNode.cx,
         "y": preNeuron.datum().y + axonNode.cy
     }
+    makeDend = prepDend(container, axonPosition)
+    dendNode = container.selectAll(".dend").data()[0]
     dendPosition = {
         "x": container.datum().x + dendNode.cx,
         "y": container.datum().y + dendNode.cy
@@ -123,7 +127,7 @@ var prepMakeSynapse = function (container) {
 
     container.on("click", (d) => {
         console.log("click")
-        makeSynapse(d, lineData)
+        makeSynapse(d, lineData, makeDend)
     })
 }
 

@@ -2,12 +2,13 @@ var d3 = require("d3")
 var d3Transform = require("d3-transform")
 var _ = require('lodash')
 const {makeBezierCurves} = require("./neuron-drawing-utils.js")
-const {neuronClickSetter, drawDendOverlay} = require("./neuron-editor-overlay")
+const {neuronClickSetter, drawDendOverlay} = require("./neuron-editor-overlay.js")
 const {prepMakeSynapse, synapseAxonMoved, synapseDendMoved} = require("./synapse-renderer.js")
+const {prepAddDend} = require("./nodes-renderer.js")
 const {remote} = require('electron')
 const {Menu, MenuItem} = remote
 
-var nextId = 0
+var nextNeuronId = 0
 
 var neuronPathSetter = function (data) {
     let pathSetter = d3.path()
@@ -24,8 +25,7 @@ var neuronPathSetter = function (data) {
 var neuronMouseOver = function (d) {
     container = d3.select("#n"+d.id)
     if (d3.select(".presyn").empty() == false && container.classed("presyn") == false && d3.select(".postyn").empty() == true) {
-        drawDendOverlay(container)
-        prepMakeSynapse(container)
+        prepMakeSynapse(container, prepAddDend)
     }
 }
 
@@ -36,10 +36,17 @@ var addNeuron = function(x, y) {
         "length": 100,
         "width": 60,
         "angle": 0,
-        "id": nextId++,
+        "id": nextNeuronId++,
         "selected": false,
         "synapses": [],
-        "nodes": []
+        "nodes": [
+            {
+                "type": "axon",
+                "id": 0,
+                "theta": 0,
+                "synapses": []
+            }
+        ]
     }   
 
     const transformSetter = d3Transform.transform()
@@ -99,18 +106,21 @@ function dragStarted(d) {
 
 function dragged(d) {
     translation = {
-        "cx": d3.event.x,
-        "cy": d3.event.y
+        "cx": d3.event.x - d.x,
+        "cy": d3.event.y - d.y
     }
 
     d3.select(this).attr("transform", d3Transform.transform().translate([d.x = d3.event.x, d.y = d3.event.y]))
 
     // update synapses
-    d3.select(this).selectAll(".axon").each((d) => {
-        d.synapses.map((id) => synapseAxonMoved(id, d, d3.select(this).datum()))
-    })
-    d3.select(this).selectAll(".dend").each((d) => {
-        d.synapses.map((id) => synapseDendMoved(id, d, d3.select(this).datum()))
+    console.log(d)
+    console.log(d3.select(this).datum())
+    d.nodes.map((n) => {
+        if (n.type == "axon") {
+            n.synapses.map((s) => synapseAxonMoved(s, translation))
+        } else if (n.type = "dend") {
+            n.synapses.map((s) => synapseDendMoved(s, translation))
+        }
     })
 }
 
