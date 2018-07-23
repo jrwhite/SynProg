@@ -103,23 +103,10 @@ function dragged(d) {
         "cy": d3.event.y
     }
 
-    
-
-    //update synapses
-    // d3.select(this).datum().synapses.map((d) => remakeSynapse(d))
-
-    // if (d3.select(this).datum().synapses.length > 0) {
-    //     remakeSynapse(d3.select(this).datum().synapses[0], "axon", translation)
-    //     // select axon, then dend. do an each() to modify their synapse line data
-    //     d3.select(this).selectAll(".axon").each((d) => {
-    //         remakeSynapse(d.synapses[0].id, translation)
-    //     })
-    // }
     d3.select(this).attr("transform", d3Transform.transform().translate([d.x = d3.event.x, d.y = d3.event.y]))
 
     // update synapses
     d3.select(this).selectAll(".axon").each((d) => {
-        console.log(d)
         d.synapses.map((id) => remakeSynapse(id, d, d3.select(this).datum()))
     })
 }
