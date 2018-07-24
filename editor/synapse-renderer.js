@@ -108,7 +108,7 @@ var prepMakeSynapse = function (container, prepDend) {
         "y": preNeuron.datum().y + axonNode.cy
     }
     makeDend = prepDend(container, axonPosition)
-    dendNode = container.selectAll(".dend").data()[0]
+    dendNode = container.selectAll(".dend.ghost").datum()
     dendPosition = {
         "x": container.datum().x + dendNode.cx,
         "y": container.datum().y + dendNode.cy

@@ -3,19 +3,23 @@ const {getNodePoints} = require("./neuron-drawing-utils.js")
 
 var drawDendOverlay = function(container) {
     console.log(container.datum().nodes)
-    overlayData = container.datum().nodes.filter((n) => n.type == "dend")
+    overlayData = container.datum().nodes
+        .filter((n) => n.type == "dend")
         .map((dend, i) => (
             {
                 "cx": getNodePoints(container.datum())[i+1].x,
                 "cy": getNodePoints(container.datum())[i+1].y,
                 "r": 5,
-                "id": "d" + dend.id 
+                "id": "d" + dend.id,
+                "ghost": dend.synapses.length == 0 
             }
         ))
 
-    dendNodeContainer = container.append("circle")
+    dendNodeContainer = container.selectAll("circle")
         .data(overlayData)
+        .enter().append("circle")
         .classed("overlay dend node", true)
+        .classed("ghost", (d) => d.ghost)
         .attr("cx", (d) => d.cx)
         .attr("cy", (d) => d.cy)
         .attr("r", (d) => d.r)

@@ -15,6 +15,7 @@ var prepAddDend = function (neuron, axonPoint) {
 
     // check if its the first dendrite
     dendrites = neuronData.nodes.filter((n) => n.type == "dend")
+    console.log(dendrites)
     let j
     if (dendrites.length == 0) {
         j = neuronData.nodes.push(

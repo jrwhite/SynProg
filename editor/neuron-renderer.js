@@ -113,8 +113,6 @@ function dragged(d) {
     d3.select(this).attr("transform", d3Transform.transform().translate([d.x = d3.event.x, d.y = d3.event.y]))
 
     // update synapses
-    console.log(d)
-    console.log(d3.select(this).datum())
     d.nodes.map((n) => {
         if (n.type == "axon") {
             n.synapses.map((s) => synapseAxonMoved(s, translation))
