@@ -29,6 +29,11 @@ var neuronMouseOver = function (d) {
     }
 }
 
+var neuronMouseOff = function(d) {
+    container = d3.select("#n"+d.id)
+    container.classed("postsyn", false)
+}
+
 var addNeuron = function(x, y) {
     let neuronData = {
         "x": x,
@@ -63,6 +68,7 @@ var addNeuron = function(x, y) {
             .on("end", dragEnded))
         .on("click", neuronClickSetter)
         .on("mouseover", neuronMouseOver)
+        .on("mouseoff", neuronMouseOff)
         .append("path").attr("d", neuronPathSetter)
 }
 

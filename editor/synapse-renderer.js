@@ -123,12 +123,19 @@ var prepMakeSynapse = function (container, prepDend) {
             "y": dendPosition.y
         }
     ]
-    console.log(lineData)
 
-    container.on("click", (d) => {
+    const clickListener = (e) => {
         console.log("click")
-        makeSynapse(d, lineData, makeDend)
-    })
+        makeSynapse(container.datum(), lineData, makeDend)
+        container.node().removeEventListener('click', clickListener)
+    }
+
+    container.node().addEventListener('click', clickListener)
+
+    // container.on("click", (d) => {
+    //     console.log("click")
+    //     makeSynapse(d, lineData, makeDend)
+    // })
 }
 
 module.exports = {
