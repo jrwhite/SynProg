@@ -1,5 +1,6 @@
 var d3 = require("d3")
 var d3Transform = require("d3-transform")
+
 var _ = require('lodash')
 const {makeBezierCurves} = require("./neuron-drawing-utils.js")
 const {neuronClickSetter, drawDendOverlay} = require("./neuron-editor-overlay.js")
@@ -7,6 +8,7 @@ const {prepMakeSynapse, synapseAxonMoved, synapseDendMoved} = require("./synapse
 const {prepAddDend} = require("./nodes-renderer.js")
 const {remote} = require('electron')
 const {Menu, MenuItem} = remote
+
 
 var nextNeuronId = 0
 

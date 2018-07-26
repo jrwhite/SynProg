@@ -1,5 +1,6 @@
 var d3 = require("d3")
 const {remote} = require('electron')
+const {drawAp} = require("./ap-renderer.js")
 
 var nextSynapseId = 0
 
@@ -128,6 +129,8 @@ var prepMakeSynapse = function (container, prepDend) {
         console.log("click")
         makeSynapse(container.datum(), lineData, makeDend)
         container.node().removeEventListener('click', clickListener)
+        // DEBUG: send ap
+        drawAp(container.id, lineData[0], lineData[1])
     }
 
     container.node().addEventListener('click', clickListener)

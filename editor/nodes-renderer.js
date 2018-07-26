@@ -37,7 +37,6 @@ var prepAddDend = function (neuron, axonPoint) {
         ) - 1
     }
 
-    console.log(drawDendOverlay)
     drawDendOverlay(neuron)
 
     return (synapse) => {
