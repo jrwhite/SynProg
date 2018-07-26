@@ -8,7 +8,7 @@
       "cwd": "${workspaceRoot}",
       "runtimeExecutable": "${workspaceRoot}/editor//node_modules/.bin/electron",
       "windows": {
-        "runtimeExecutable": "${workspaceRoot}\\editor\\node_modules\\.bin\\electron.cmd"
+        "runtimeExecutable": "${workspaceRoot}/editor/node_modules/.bin/electron.cmd"
       },
       "program": "${workspaceRoot}/editor/main.js",
       "protocol": "inspector",
@@ -20,13 +20,15 @@
       "request": "launch",
       "runtimeExecutable": "${workspaceRoot}/editor/node_modules/.bin/electron",
       "windows": {
-        "runtimeExecutable": "${workspaceRoot}\\editor\\node_modules\\.bin\\electron.cmd"
+        "runtimeExecutable": "${workspaceRoot}/editor/node_modules/.bin/electron.cmd"
       },
       "runtimeArgs": [
-        "${workspaceRoot}/editor/main.js",
+        // "${workspaceRoot}/editor/main.js",
+        "http://localhost:4000",
         "--remote-debugging-port=9222"
       ],
-      "webRoot": "${workspaceRoot}"
+      "sourceMaps": true,
+      "webRoot": "${workspaceRoot}/editor"
     }
   ]
 }

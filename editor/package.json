@@ -22,8 +22,5 @@
     "d3-zoom": "^1.7.1",
     "d3-transform": "^1.0.5",
     "lodash": "^4.17.10"
-  },
-  "dependencies": {
-    "lodash": "^4.17.10"
   }
 }

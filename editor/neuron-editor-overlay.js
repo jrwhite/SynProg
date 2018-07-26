@@ -79,6 +79,7 @@ var neuronClickSetter = function (d) {
     if (d.selected == false) {
         // reset overlay for previously selected neuron
         d3.selectAll(".overlay").remove()
+        d3.selectAll(".neuron").each((d) => d.selected = false).classed("overlayed", false)
 
         // draw overlay on selected neuron
         drawOverlay(d3.select("#n" + d.id))
