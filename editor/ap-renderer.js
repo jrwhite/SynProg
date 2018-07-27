@@ -12,6 +12,7 @@ var drawAp = function (id, startPoint, endPoint) {
         "r": 5,
         "id": id
     }]
+
     // create ap element
     let apContainer = d3.select("svg").append("circle")
         .data(apData)
@@ -26,9 +27,25 @@ var drawAp = function (id, startPoint, endPoint) {
         .attr("cx", (d) => d.endX)
         .attr("cy", (d) => d.endY)
         .remove()
-
 }
 
+var fireAp = function (neuronData) {
+    neuronData.synapses.map((synapseId) => {
+        d3.select("#" + synapseId).call((s) => {
+                console.log(neuronData)
+                console.log(s.selectAll("path").datum())
+            drawAp(
+                neuronData.id,
+                // maybe just do s.select("path").datum()
+                s.selectAll("path").datum()[0],
+                s.selectAll("path").datum()[1]
+            )
+        })
+    })
+}
+
+
 module.exports = {
-    drawAp: drawAp 
+    drawAp: drawAp,
+    fireAp: fireAp 
 }

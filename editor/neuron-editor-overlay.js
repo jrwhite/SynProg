@@ -1,5 +1,6 @@
 const d3 = require("d3")
 const {getNodePoints} = require("./neuron-drawing-utils.js")
+const {fireAp} = require("./ap-renderer.js")
 
 var drawDendOverlay = function(container) {
     console.log(container.datum().nodes)
@@ -70,6 +71,14 @@ var drawOverlay = function(container) {
         .attr("r", (d) => d.r)
         .attr("fill", "red")
         .on("click", (d) => container.remove())
+    
+    fireContainer = container.append("circle")
+        .classed("overlay fire", true)
+        .attr("cx", -50)
+        .attr("cy", -50)
+        .attr("r", 10)
+        .attr("fill", "blue")
+        .on("click", (d) => fireAp(d))
 
     drawAxonOverlay(container)
     drawDendOverlay(container)
