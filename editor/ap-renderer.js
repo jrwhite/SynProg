@@ -3,7 +3,7 @@ const {remote} = require('electron')
 
 setImmediate(() => console.log(module))
 
-var drawAp = function (id, startPoint, endPoint) {
+var drawAp = function (id, startPoint, endPoint, callback) {
     let apData = [{
         "startX": startPoint.x,
         "startY": startPoint.y,
@@ -12,6 +12,8 @@ var drawAp = function (id, startPoint, endPoint) {
         "r": 5,
         "id": id
     }]
+
+    const length = Math.hypot(endPoint.x - startPoint.x, endPoint.y - startPoint.y)
 
     // create ap element
     let apContainer = d3.select("svg").append("circle")
@@ -23,13 +25,21 @@ var drawAp = function (id, startPoint, endPoint) {
         .attr("id", (d) => d.id)
         .attr("fill", "blue")
     
-    let apTransition = apContainer.transition()
+    let transitionSetter = d3.transition()
+        .duration(length * 5)
+        .ease(d3.easeLinear)
+        // DONT DELETE THIS
+        // might be useful
+        // .attrTween("transform", translateAlong(linePath.node()))
+        .on("end", callback)
+
+    let apTransition = apContainer.transition(transitionSetter)
         .attr("cx", (d) => d.endX)
         .attr("cy", (d) => d.endY)
         .remove()
 }
 
-var fireAp = function (neuronData) {
+var fireAp = function (neuronData, callback) {
     neuronData.synapses.map((synapseId) => {
         d3.select("#" + synapseId).call((s) => {
                 console.log(neuronData)
@@ -38,7 +48,12 @@ var fireAp = function (neuronData) {
                 neuronData.id,
                 // maybe just do s.select("path").datum()
                 s.selectAll("path").datum()[0],
-                s.selectAll("path").datum()[1]
+                s.selectAll("path").datum()[1],
+                () => {
+                    console.log("ap received")
+                    console.log(s.datum())
+                    callback(d3.select("#n"+s.datum().postId).datum(), s.datum().weighting)
+                }
             )
         })
     })

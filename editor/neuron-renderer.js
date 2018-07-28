@@ -9,6 +9,7 @@ const {prepAddDend} = require("./nodes-renderer.js")
 const {drawPotential} = require("./potential-renderer.js")
 const {remote} = require('electron')
 const {Menu, MenuItem} = remote
+const {startRuntime} = require("./test-runtime")
 
 
 var nextNeuronId = 0
@@ -77,7 +78,9 @@ var addNeuron = function(x, y) {
         .on("mouseoff", neuronMouseOff)
 
     newNeuron.append("path").attr("d", neuronPathSetter)
-    newNeuron.call(drawPotential) // must come after the body path is drawn
+    drawPotential(neuronData)
+    neuronData.potential = 25
+    drawPotential(neuronData)
 }
 
 var createMenu = function () {
@@ -111,6 +114,7 @@ var init = function initializeRenderer() {
     
     // TODO: put this stuff in the electron code (main.js)
     createMenu()
+    startRuntime()
 }
 
 function dragStarted(d) {

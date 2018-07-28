@@ -27,8 +27,10 @@ var makeSynapse = function (d, lineData, makeDend) {
     postsyn = d3.select(".postsyn").datum()
     let synapseData = {
         "id": "s" + nextSynapseId++,
-        "axonNode": presyn.id,
-        "dendNode": postsyn.id
+        "preId": presyn.id,
+        "postId": postsyn.id,
+        "weighting": 50,
+        "length": Math.hypot(lineData[1].x - lineData[0].x, lineData[1].y - lineData[0].y)
     }
     let line = d3.line()
         .x((d) => d.x)

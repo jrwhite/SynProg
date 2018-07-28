@@ -1,6 +1,6 @@
 const d3 = require("d3")
+const {exciteNeuron} = require("./test-runtime")
 const {getNodePoints} = require("./neuron-drawing-utils.js")
-const {fireAp} = require("./ap-renderer.js")
 
 var drawDendOverlay = function(container) {
     console.log(container.datum().nodes)
@@ -57,28 +57,21 @@ var drawAxonOverlay = function(container) {
 var drawOverlay = function(container) {
     container.classed("overlayed", true)
 
-    const deleteData = {
-        "cx": 50,
-        "cy": -50,
-        "r": 10
-    }
-
     deleteContainer = container.append("circle")
-        .data([deleteData])
         .classed("overlay delete", true)
-        .attr("cx", (d) => d.cx)
-        .attr("cy", (d) => d.cy)
-        .attr("r", (d) => d.r)
+        .attr("cx", 50)
+        .attr("cy", -50)
+        .attr("r", 10)
         .attr("fill", "red")
         .on("click", (d) => container.remove())
     
-    fireContainer = container.append("circle")
+    exciteContainer = container.append("circle")
         .classed("overlay fire", true)
         .attr("cx", -50)
         .attr("cy", -50)
         .attr("r", 10)
         .attr("fill", "blue")
-        .on("click", (d) => fireAp(d))
+        .on("click", (d) => exciteNeuron(d, 25))
 
     drawAxonOverlay(container)
     drawDendOverlay(container)

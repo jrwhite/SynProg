@@ -22,6 +22,7 @@ var prepAddDend = function (neuron, axonPoint) {
             {
                 "type": "dend",
                 "id": 0,
+                "weighting": 30,
                 "theta": 1,
                 "synapses": []
             }
@@ -32,6 +33,7 @@ var prepAddDend = function (neuron, axonPoint) {
                 "type": "dend",
                 "id": dendrites.reduce((d, cur) => d > cur ? d: cur) + 1, 
                 "theta": axonPoint.y < neuronData.y ? 1.4: 0.6, // temporarily just 3 dendrites
+                "weighting": 30,
                 "synapses": []
             }
         ) - 1
