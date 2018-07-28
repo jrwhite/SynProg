@@ -46,6 +46,9 @@ var addNeuron = function(x, y) {
         "angle": 0,
         "id": nextNeuronId++,
         "selected": false,
+        "potential": 50,
+        "potential-arc": d3.arc(),
+        "firing": false,
         "synapses": [],
         "nodes": [
             {

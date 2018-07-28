@@ -17,3 +17,7 @@ html {
 .active {
 
 }
+
+.potential {
+    fill: "red"
+}
