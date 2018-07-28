@@ -40,7 +40,7 @@ var drawAp = function (id, startPoint, endPoint, callback) {
 }
 
 var fireAp = function (neuronData, callback) {
-    neuronData.synapses.map((synapseId) => {
+    neuronData.nodes[0].synapses.map((synapseId) => {
         d3.select("#" + synapseId).call((s) => {
                 console.log(neuronData)
                 console.log(s.selectAll("path").datum())

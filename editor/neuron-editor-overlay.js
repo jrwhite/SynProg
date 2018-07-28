@@ -54,6 +54,16 @@ var drawAxonOverlay = function(container) {
         .on("click", (d) => startSynapse(container, d))
 }
 
+var deleteNeuron = function (neuronData) {
+    // delete synapses
+    neuronData.synapses.map((s) => {
+        d3.select("#"+s).remove()
+    })
+    // delete neuron
+    d3.select("#n"+neuronData.id).remove()
+    
+}
+
 var drawOverlay = function(container) {
     container.classed("overlayed", true)
 
@@ -63,7 +73,7 @@ var drawOverlay = function(container) {
         .attr("cy", -50)
         .attr("r", 10)
         .attr("fill", "red")
-        .on("click", (d) => container.remove())
+        .on("click", (d) => deleteNeuron(d))
     
     exciteContainer = container.append("circle")
         .classed("overlay fire", true)
