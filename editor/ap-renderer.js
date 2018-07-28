@@ -44,7 +44,6 @@ var fireAp = function (neuronData) {
     })
 }
 
-
 module.exports = {
     drawAp: drawAp,
     fireAp: fireAp 

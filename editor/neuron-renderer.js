@@ -6,6 +6,7 @@ const {makeBezierCurves} = require("./neuron-drawing-utils.js")
 const {neuronClickSetter, drawDendOverlay} = require("./neuron-editor-overlay.js")
 const {prepMakeSynapse, synapseAxonMoved, synapseDendMoved} = require("./synapse-renderer.js")
 const {prepAddDend} = require("./nodes-renderer.js")
+const {drawPotential} = require("./potential-renderer.js")
 const {remote} = require('electron')
 const {Menu, MenuItem} = remote
 
@@ -59,7 +60,7 @@ var addNeuron = function(x, y) {
     const transformSetter = d3Transform.transform()
         .translate((d) => ([d.x, d.y]))
 
-    d3.select("svg").append("g")
+    let newNeuron = d3.select("svg").append("g")
         .data([neuronData])
         .attr("class", "neuron")
         .attr("id", (d) => "n"+d.id)
@@ -71,7 +72,9 @@ var addNeuron = function(x, y) {
         .on("click", neuronClickSetter)
         .on("mouseover", neuronMouseOver)
         .on("mouseoff", neuronMouseOff)
-        .append("path").attr("d", neuronPathSetter)
+
+    newNeuron.append("path").attr("d", neuronPathSetter)
+    newNeuron.call(drawPotential) // must come after the body path is drawn
 }
 
 var createMenu = function () {
