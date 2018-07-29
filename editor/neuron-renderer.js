@@ -9,7 +9,7 @@ const {prepAddDend} = require("./nodes-renderer.js")
 const {drawPotential} = require("./potential-renderer.js")
 const {remote} = require('electron')
 const {Menu, MenuItem} = remote
-const {startRuntime} = require("./test-runtime")
+const {startRuntime, fireNeuron} = require("./test-runtime")
 
 
 var nextNeuronId = 0
@@ -48,6 +48,7 @@ var addNeuron = function(x, y) {
         "id": nextNeuronId++,
         "selected": false,
         "potential": 50,
+        "memCurrent": 0,
         "potential-arc": d3.arc(),
         "firing": false,
         "synapses": [],
@@ -81,6 +82,11 @@ var addNeuron = function(x, y) {
     drawPotential(neuronData)
     neuronData.potential = 25
     drawPotential(neuronData)
+    return newNeuron
+}
+
+let makeNeuronInput = function (neuron) {
+    neuron.classed("input", true)
 }
 
 var createMenu = function () {

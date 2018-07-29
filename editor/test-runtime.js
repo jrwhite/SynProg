@@ -1,6 +1,11 @@
 var d3 = require("d3")
 const {drawPotential} = require("./potential-renderer")
 const {fireAp} = require("./ap-renderer")
+const {startGym} = require("./gym-client")
+
+var setMemCurrent = function (neuronData, current) {
+    neuronData.memCurrent = current
+}
 
 var exciteNeuron = function(neuronData, val) {
     newPotential = neuronData.potential + val
@@ -28,22 +33,44 @@ var decayNeuron = function (neuronData) {
     drawPotential(neuronData)
 }
 
-let step = function () {
-    d3.selectAll(".neuron")
-        .each((d) => {
-            decayNeuron(d)
-            if (d.potential >= 100) {
-                fireNeuron(d)
-                d.potential = -100
-            }
-        })
-}
 
-let startRuntime = function () {
-    const interval = d3.interval(step, 100)
+let startRuntime = function (shouldStartGym) {
+    let gymIsRunning = false
+    let stepGym = null
+    if (shouldStartGym) {
+        stepGym = startGym()
+        gymIsRunning = true
+    }
+    
+    let step = () => {
+        d3.selectAll(".neuron")
+            .each((d) => {
+                decayNeuron(d)
+                if (d.memCurrent > 0) {
+                    exciteNeuron(d, d.memCurrent)
+                }
+                if (d.potential >= 100) {
+                    fireNeuron(d)
+                    d.potential = -100
+                }
+            })
+        // if gym is running, step gym too
+        if (gymIsRunning) {
+            stepGym()
+        }
+    }
+
+    let interval = d3.interval(step, 100)
+
+    const stopRuntime = () => {
+        interval.stop()
+    }
+
+    return stopRuntime
 }
 
 module.exports = {
     startRuntime: startRuntime,
-    exciteNeuron: exciteNeuron
+    exciteNeuron: exciteNeuron,
+    setMemCurrent: setMemCurrent
 }
