@@ -41,8 +41,6 @@ var drawAxonOverlay = function(container) {
             }
         ))
 
-    console.log(axonData)
-
     axonOverlayContainer = container.append("circle")
         .data(axonData)
         .classed("overlay axon node", true)
@@ -61,7 +59,6 @@ var deleteNeuron = function (neuronData) {
     })
     // delete neuron
     d3.select("#n"+neuronData.id).remove()
-    
 }
 
 var drawOverlay = function(container) {

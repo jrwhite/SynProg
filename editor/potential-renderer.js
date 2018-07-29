@@ -1,5 +1,4 @@
 var d3 = require("d3")
-const {fireAp} = require("./ap-renderer")
 
 var drawPotential = function (neuronData) {
     let arc = d3.arc()

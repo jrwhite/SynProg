@@ -136,11 +136,6 @@ var prepMakeSynapse = function (container, prepDend) {
     }
 
     container.node().addEventListener('click', clickListener)
-
-    // container.on("click", (d) => {
-    //     console.log("click")
-    //     makeSynapse(d, lineData, makeDend)
-    // })
 }
 
 module.exports = {
