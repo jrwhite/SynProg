@@ -1,6 +1,7 @@
 const electron = require('electron')
 const app = electron.app
 const BrowserWindow = electron.BrowserWindow
+const path = require('path')
 
 let mainWindow
 
@@ -15,11 +16,9 @@ function createWindow() {
     mainWindow.on('closed', function() {
         mainWindow = null
     })
-
 }
 
 // spawn python gym process
-
 let pyProc = null
 let pyPort = null
 
@@ -44,8 +43,8 @@ const exitPyProc = () => {
 }
 
 app.on('ready', function() {
-    createWindow()
     createPyProc()
+    createWindow()
 })
 
 app.on('will-quit', function() {

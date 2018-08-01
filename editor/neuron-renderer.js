@@ -120,7 +120,9 @@ var init = function initializeRenderer() {
     
     // TODO: put this stuff in the electron code (main.js)
     createMenu()
-    startRuntime()
+    addNeuron(100, 100).classed("input", true).datum().memCurrent = 10
+    addNeuron(200, 100).classed("output", true)
+    startRuntime(true)
 }
 
 function dragStarted(d) {

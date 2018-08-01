@@ -37,8 +37,10 @@ var decayNeuron = function (neuronData) {
 let startRuntime = function (shouldStartGym) {
     let gymIsRunning = false
     let stepGym = null
-    if (shouldStartGym) {
+    if (shouldStartGym == true) {
+        console.log('starting')
         stepGym = startGym()
+        console.log(stepGym)
         gymIsRunning = true
     }
     
