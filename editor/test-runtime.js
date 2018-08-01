@@ -44,6 +44,7 @@ let startRuntime = function (shouldStartGym) {
         gymIsRunning = true
     }
     
+    let i = 0
     let step = () => {
         d3.selectAll(".neuron")
             .each((d) => {
@@ -58,11 +59,14 @@ let startRuntime = function (shouldStartGym) {
             })
         // if gym is running, step gym too
         if (gymIsRunning) {
-            stepGym()
+            if (i++ >= 4) {
+                i = 0
+                stepGym()
+            }
         }
     }
 
-    let interval = d3.interval(step, 100)
+    let interval = d3.interval(step, 200)
 
     const stopRuntime = () => {
         interval.stop()

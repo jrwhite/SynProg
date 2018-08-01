@@ -113,10 +113,6 @@ var createMenu = function () {
 }
 
 var init = function initializeRenderer() {
-    // TODO: just make this part of index.html
-    let svgContainer = d3.select("body").append("svg")
-        .attr("width", 1000)
-        .attr("height", 800)
     
     // TODO: put this stuff in the electron code (main.js)
     createMenu()

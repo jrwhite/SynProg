@@ -1,19 +1,17 @@
 import sys
 import zerorpc
-# from cartpole import start, step, reset 
+from cartpole import start, step, reset 
 
 class CartPoleApi(object):
     def start(self):
-        # return start()
-        return '0'
+        return start()
 
     def step(self, action):
-        # return step(int(action))
-        return '0'
+        return step(int(action))
 
     def reset(self):
-        # reset()
-        return '0'
+        reset()
+        return 'ok'
 
 def main():
     addr = 'tcp://127.0.0.1:4242' 

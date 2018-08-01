@@ -13,17 +13,16 @@ let stepGym = function(client) {
     let inputNeurons = d3.selectAll(".input")
     let outputNeuron = d3.selectAll(".output") // there should only be one
     // client.invoke("step", outputNeuron.datum().potential, (error, res) => {
-    client.invoke("step", 0, (error, res, more) => {
-        console.log(error)
+    client.invoke("step", '0', (error, res, more) => {
+        // console.log(error)
         console.log(res)
-        // if (error) {
-        //     console.error(error)
-        // } else {
-        //     console.log(res)
+        if (error) {
+            console.error(error)
+        } else {
+            console.log(res)
             // returns new membrane current for input neurons
-            // inputNeurons.each((d) => (d.memCurrent = res))
-            inputNeurons.each((d) => (d.memCurrent = 0))
-        // }
+            inputNeurons.each((d) => (d.memCurrent = res * 100))
+        }
     })
 }
 
